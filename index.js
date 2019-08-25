@@ -20,6 +20,7 @@ function runServer() {
     app.listen(13334);
 
     console.log(`Server listening on port 13334`);
+    console.log(`API: POST { "colors": [{ "r": 255, "g": 255, "b": 255, "w": 255 }, { "r": 0, "g": 255, "b": 0, "w": 255 }]}`);
 
     function changeLeds(colors) {
         ledManager.setColors(colors);
@@ -39,23 +40,10 @@ function ledNb(nleds) {
 class LedManager {
     constructor() {
         this.config = {};
-
-        // Number of leds in my strip
         this.config.leds = LED_NB;
-
-        // Set full brightness, a value from 0 to 255 (default 255)
         this.config.brightness = 255;
-
-        // Set the GPIO number to communicate with the Neopixel strip (default 18)
         this.config.gpio = PIN;
-
-        // The RGB sequence may vary on some strips. Valid values
-        // are "rgb", "rbg", "grb", "gbr", "bgr", "brg".
-        // Default is "rgb".
-        // RGBW strips are not currently supported.
         this.config.strip = 'rgb';
-
-        // Configure ws281x
         ws281x.configure(this.config);
     }
 
@@ -88,10 +76,6 @@ function translate(a) {
         const j = i / 3;
         newArray[j] = ((a[i] << 24) | (a[i+1] << 16) | (a[i+2] << 8) | (a[i+3]))
     }
-
-    // for (let i = 0; i < LED_NB; i++) {
-    //     newArray[i] = ((a.shift() << 16) | (a.shift() << 8) | (a.shift()));
-    // }
 
     return newArray;
 }
