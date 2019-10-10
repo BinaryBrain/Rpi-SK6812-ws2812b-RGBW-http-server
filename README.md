@@ -1,6 +1,6 @@
 # Rpi-SK6812-ws2812b-RGBW-http-server
 
-This is an express server that expose an API to drive SK6812/ws2812b RGBW LED strips on a Raspberry Pi
+This is an express server that exposes an API to drive SK6812/ws2812b RGBW LED strips on a Raspberry Pi
 
 ## Hardware Install
 
