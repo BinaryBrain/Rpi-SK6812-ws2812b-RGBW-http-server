@@ -21,9 +21,14 @@ function runServer() {
 
     console.log(`Server listening on port 13334`);
     console.log(`API: POST { "colors": [{ "r": 255, "g": 255, "b": 255, "w": 255 }, { "r": 0, "g": 255, "b": 0, "w": 255 }]}`);
+    console.log(`API: POST { "colors": ["FF00FF00", "77FF22FF", "00FFFF00"]}`);
 
     function changeLeds(colors) {
-        ledManager.setColors(colors);
+        if (typeof color === "string") {
+            ledManager.setColorsStr(colors);
+        } else {
+            ledManager.setColorsObj(colors);
+        }
     }
 
 }
@@ -47,8 +52,36 @@ class LedManager {
         ws281x.configure(this.config);
     }
 
+    // FORMAT: ["FFAA66", "FFAA66FF"]
+    setColorsStr (colors) {
+        const colorArray = [];
+
+        for (let color of colors) {
+            const value = parseInt(color, 16);
+
+            if (color.length == 8) {
+                r = (value >> 24) & 255;
+                g = (value >> 16) & 255;
+                b = (value >> 8) & 255;
+                w = value & 255;
+            } else {
+                r = (value >> 16) & 255;
+                g = (value >> 8) & 255;
+                b = value & 255;
+                w = 0;
+            }
+
+            colorArray.push(r, g, b, w);
+        }
+
+        const pixels = translate(colorArray);
+
+        // Render to strip
+        ws281x.render(pixels);
+    }
+
     // FORMAT: [{r: 255, g: 255, b: 255, w?: 255}]
-    setColors (colors) {
+    setColorsObj (colors) {
         const colorArray = [];
 
         for (let color of colors) {
