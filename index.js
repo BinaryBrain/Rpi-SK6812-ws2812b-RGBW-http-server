@@ -41,6 +41,7 @@ function runUdpServer() {
     server.on('listening', () => {
         const address = server.address();
         console.log(`UDP server listening ${address.address}:${address.port}`);
+        console.log(`First byte is header: 0x03 for RGB, 0x04 for RGBW. Rest is payload, each byte is a color value.`);
     });
 
     server.bind(13335);

@@ -21,6 +21,8 @@ npm start
 
 ## API
 
+### HTTP
+
 Do an HTTP POST with this JSON body:
 
 ```json
@@ -28,14 +30,44 @@ Do an HTTP POST with this JSON body:
     "colors": [
         { "r": 255, "g": 255, "b": 255, "w": 255 },
         { "r": 255, "g": 0, "b": 0, "w": 0 },
-        { "r": 0, "g": 255, "b": 0, "w": 0 },
-        { "r": 0, "g": 0, "b": 255, "w": 0 },
+        { "r": 0, "g": 255, "b": 0 },
+        { "r": 0, "g": 0, "b": 255 },
         { "r": 0, "g": 0, "b": 0, "w": 255 }
     ]
 }
 ```
 
+Or this JSON body:
+
+```json
+{
+    "colors": [
+        "FF995522",
+        "FF9955",
+        "FF995500",
+    ]
+}
+```
+
+_Note that the "white" value is optionnal. It will default to 0._
 _With as many element in the array as your LED strip is. Usually 30, **60** or 120 LED/m_
+
+### UDP
+
+First byte is header: 0x03 for RGB, 0x04 for RGBW. Rest is payload, each byte is a color value.
+For instance:
+
+```
+0x04
+0xFF
+0x99
+0x55
+0x22
+0xFF
+0x99
+0x55
+0x22
+```
 
 ### curl Example
 
