@@ -1,3 +1,4 @@
+const dgram = require('dgram');
 const express = require('express');
 const ws281x = require('rpi-ws281x');
 const bodyParser = require('body-parser');
@@ -5,7 +6,47 @@ const bodyParser = require('body-parser');
 const LED_NB = ledNb(300);
 const PIN = 18;
 
-function runServer() {
+
+function runUdpServer() {
+    const server = dgram.createSocket('udp4');
+
+    server.on('error', (err) => {
+        console.log(`UDP server error:\n${err.stack}`);
+        server.close();
+    });
+
+    server.on('message', (msg, rinfo) => {
+        console.log(`UDP server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
+
+        if (msg.slice(0,1) === 3) {
+            // Binary RGB
+            const payload = new Uint8Array(msg.slice(1, msg.length));
+            const colorArray = Array.from(payload);
+            // Render to strip
+            ws281x.render(colorArray);
+        } else if (msg.slice(0,1) === 4) {
+            // Binary RGBW
+            const payload = new Uint8Array(msg.slice(1, msg.length));
+            const colorArray = Array.from(payload);
+            // Translate and render to strip
+            ws281x.render(translate(colorArray));
+        } else if (msg.toString(0, 1) === '{') {
+            // JSON
+            changeLeds(JSON.parse(msg.toString('utf-8')));
+        } else {
+            console.log(`UDP server error: Cannot read packet starting with byte ${msg.slice(0, 1)}`);
+        }
+    });
+
+    server.on('listening', () => {
+        const address = server.address();
+        console.log(`UDP server listening ${address.address}:${address.port}`);
+    });
+
+    server.bind(13335);
+}
+
+function runExpressServer() {
     const app = express();
     const ledManager = new LedManager();
 
@@ -113,4 +154,5 @@ function translate(a) {
     return newArray;
 }
 
-runServer();
+runUdpServer();
+runExpressServer();
