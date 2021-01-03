@@ -50,26 +50,32 @@ Or this JSON body:
 ```
 
 _Note that the "white" value is optionnal. It will default to 0._
-_With as many element in the array as your LED strip is. Usually 30, **60** or 120 LED/m_
+_With as many element in the array as your LED strip is. Usually 30, **60** or 120 LED/m._
 
 ### UDP
 
 First byte is header: 0x03 for RGB, 0x04 for RGBW. Rest is payload, each byte is a color value.
+
 For instance:
 
 ```
-0x04
-0xFF
-0x99
-0x55
-0x22
-0xFF
-0x99
-0x55
-0x22
+Head R    G    B    R    G    B   
+0x03 0xFF 0x99 0x55 0xFF 0x99 0x55
 ```
 
-### curl Example
+```
+Head R    G    B    W    R    G    B    W   
+0x04 0xFF 0x99 0x55 0x22 0xFF 0x99 0x55 0x22
+```
+
+You can also send a JSON on UDP.
+If the first character is a curly bracket (`{`) it will behave like the HTTP API.
+
+```json
+{"colors": ["FF9955", "FF9955FF"]}
+```
+
+## curl Example
 
 ```sh
 curl -X POST \
