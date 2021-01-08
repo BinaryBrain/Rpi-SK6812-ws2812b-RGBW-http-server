@@ -18,13 +18,13 @@ function runUdpServer() {
     server.on('message', (msg, rinfo) => {
         console.log(`UDP server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
 
-        if (msg.slice(0,1) === 3) {
+        if (msg.readUInt8() === 3) {
             // Binary RGB
             const payload = new Uint8Array(msg.slice(1, msg.length));
             const colorArray = Array.from(payload);
             // Render to strip
             ws281x.render(colorArray);
-        } else if (msg.slice(0,1) === 4) {
+        } else if (msg.readUInt8() === 4) {
             // Binary RGBW
             const payload = new Uint8Array(msg.slice(1, msg.length));
             const colorArray = Array.from(payload);
