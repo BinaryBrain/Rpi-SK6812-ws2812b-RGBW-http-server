@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const LED_NB = ledNb(300);
 const PIN = 18;
 
+const ledManager = new LedManager();
 
 function runUdpServer() {
     const server = dgram.createSocket('udp4');
@@ -20,17 +21,17 @@ function runUdpServer() {
 
         if (msg.readUInt8() === 3) {
             // Binary RGB
-            const payload = new Uint8Array(msg.slice(1, msg.length));
+            const payload = new Uint32Array(msg.slice(1, msg.length));
             const colorArray = Array.from(payload);
             // Render to strip
-            ws281x.render(colorArray);
+            ws281x.render(translate(colorArray));
         } else if (msg.readUInt8() === 4) {
             // Binary RGBW
-            const payload = new Uint8Array(msg.slice(1, msg.length));
-            const colorArray = Array.from(payload);
+            const payload = new Uint32Array(msg.slice(1, msg.length));
+            // const colorArray = Array.from(payload);
             // Translate and render to strip
-            ws281x.render(translate(colorArray));
-        } else if (msg.toString(0, 1) === '{') {
+            ws281x.render(payload);
+        } else if (msg.toString('utf-8', 0, 1) === '{') {
             // JSON
             changeLeds(JSON.parse(msg.toString('utf-8')));
         } else {
@@ -49,7 +50,6 @@ function runUdpServer() {
 
 function runExpressServer() {
     const app = express();
-    const ledManager = new LedManager();
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
@@ -64,16 +64,15 @@ function runExpressServer() {
     console.log(`Server listening on port 13334`);
     console.log(`API: POST { "colors": [{ "r": 255, "g": 255, "b": 255, "w": 255 }, { "r": 0, "g": 255, "b": 0, "w": 255 }]}`);
     console.log(`API: POST { "colors": ["FF00FF00", "77FF22FF", "00FFFF00"]}`);
+}
 
-    function changeLeds(colors) {
-        const color = colors[0];
-        if (typeof color === "string") {
-            ledManager.setColorsStr(colors);
-        } else {
-            ledManager.setColorsObj(colors);
-        }
+function changeLeds(colors) {
+    const color = colors[0];
+    if (typeof color === "string") {
+        ledManager.setColorsStr(colors);
+    } else {
+        ledManager.setColorsObj(colors);
     }
-
 }
 
 function ledNb(nleds) {
