@@ -21,13 +21,13 @@ function runUdpServer() {
 
         if (msg.readUInt8() === 3) {
             // Binary RGB
-            const payload = new Uint32Array(msg.slice(1, msg.length));
+            const payload = new Uint32Array(msg.slice(1, msg.length).swap32());
             const colorArray = Array.from(payload);
             // Render to strip
             ledManager.renderArray(colorArray);
         } else if (msg.readUInt8() === 4) {
             // Binary RGBW
-            const payload = new Uint32Array(msg.slice(1, msg.length));
+            const payload = new Uint32Array(msg.slice(1, msg.length).swap32());
             // const colorArray = Array.from(payload);
             // Translate and render to strip
             ledManager.renderBytes(payload);
