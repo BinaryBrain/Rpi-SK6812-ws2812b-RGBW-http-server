@@ -74,7 +74,7 @@ class LedManager {
     }
 
     translate (array) {
-        const newArray = new Uint32Array(LED_NB);
+        const newArray = new Uint32Array(this.LED_NB);
     
         for (let i = 0; i < array.length; i = i + 3) {
             const j = i / 3;
