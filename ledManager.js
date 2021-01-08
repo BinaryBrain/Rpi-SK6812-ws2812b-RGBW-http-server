@@ -23,16 +23,16 @@ class LedManager {
             let b = 0;
             let w = 0;
 
-            if (color.length == 8) {
-                r = (value >> 24) & 255;
+            if (color.length === 8) {
+                w = (value >> 24) & 255;
                 g = (value >> 16) & 255;
-                b = (value >> 8) & 255;
-                w = value & 255;
-            } else {
-                r = (value >> 16) & 255;
-                g = (value >> 8) & 255;
+                r = (value >> 8) & 255;
                 b = value & 255;
+            } else {
                 w = 0;
+                g = (value >> 16) & 255;
+                r = (value >> 8) & 255;
+                b = value & 255;
             }
 
             colorArray.push(r, g, b, w);
