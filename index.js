@@ -33,7 +33,7 @@ function runUdpServer() {
             ledManager.renderBytes(payload);
         } else if (msg.toString('utf-8', 0, 1) === '{') {
             // JSON
-            changeLeds(JSON.parse(msg.toString('utf-8')));
+            changeLeds(JSON.parse(msg.toString('utf-8')).colors);
         } else {
             console.log(`UDP server error: Cannot read packet starting with byte ${msg.slice(0, 1)}`);
         }
