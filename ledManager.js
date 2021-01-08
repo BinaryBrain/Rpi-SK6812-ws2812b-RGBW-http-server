@@ -24,18 +24,18 @@ class LedManager {
             let w = 0;
 
             if (color.length === 8) {
-                w = (value >> 24) & 255;
+                r = (value >> 24) & 255;
                 g = (value >> 16) & 255;
-                r = (value >> 8) & 255;
-                b = value & 255;
+                b = (value >> 8) & 255;
+                w = value & 255;
             } else {
-                w = 0;
-                g = (value >> 16) & 255;
-                r = (value >> 8) & 255;
+                r = (value >> 16) & 255;
+                g = (value >> 8) & 255;
                 b = value & 255;
+                w = 0;
             }
 
-            colorArray.push(r, g, b, w);
+            colorArray.push(w, g, r, b);
         }
 
         const pixels = this.translate(colorArray);
