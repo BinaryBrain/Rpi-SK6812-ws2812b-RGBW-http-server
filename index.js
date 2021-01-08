@@ -102,6 +102,11 @@ class LedManager {
         for (let color of colors) {
             const value = parseInt(color, 16);
 
+            let r = 0;
+            let g = 0;
+            let b = 0;
+            let w = 0;
+
             if (color.length == 8) {
                 r = (value >> 24) & 255;
                 g = (value >> 16) & 255;
