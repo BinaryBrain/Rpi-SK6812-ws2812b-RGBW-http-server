@@ -37,7 +37,7 @@ class LedManager {
             colorArray.push(r, g, b, w);
         }
 
-        const pixels = translate(colorArray);
+        const pixels = this.translate(colorArray);
 
         // Render to strip
         ws281x.render(pixels);
