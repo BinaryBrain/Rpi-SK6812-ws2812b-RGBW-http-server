@@ -66,6 +66,7 @@ function runExpressServer() {
     console.log(`API: POST { "colors": ["FF00FF00", "77FF22FF", "00FFFF00"]}`);
 
     function changeLeds(colors) {
+        const color = colors[0];
         if (typeof color === "string") {
             ledManager.setColorsStr(colors);
         } else {
