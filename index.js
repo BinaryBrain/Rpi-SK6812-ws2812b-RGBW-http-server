@@ -1,5 +1,3 @@
-const ws281x = require('rpi-ws281x');
-
 const dgram = require('dgram');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -26,13 +24,13 @@ function runUdpServer() {
             const payload = new Uint32Array(msg.slice(1, msg.length));
             const colorArray = Array.from(payload);
             // Render to strip
-            ws281x.render(translate(colorArray));
+            ledManager.renderArray(colorArray);
         } else if (msg.readUInt8() === 4) {
             // Binary RGBW
             const payload = new Uint32Array(msg.slice(1, msg.length));
             // const colorArray = Array.from(payload);
             // Translate and render to strip
-            ws281x.render(payload);
+            ledManager.renderBytes(payload);
         } else if (msg.toString('utf-8', 0, 1) === '{') {
             // JSON
             changeLeds(JSON.parse(msg.toString('utf-8')));
@@ -84,17 +82,6 @@ function ledNb(nleds) {
     } else {
         return nbytes / 3;
     }
-}
-
-function translate(a) {
-    const newArray = new Uint32Array(LED_NB);
-
-    for (let i = 0; i < a.length; i = i + 3) {
-        const j = i / 3;
-        newArray[j] = ((a[i] << 24) | (a[i+1] << 16) | (a[i+2] << 8) | (a[i+3]))
-    }
-
-    return newArray;
 }
 
 runUdpServer();

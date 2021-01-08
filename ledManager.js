@@ -58,10 +58,29 @@ class LedManager {
             colorArray.push(color.b); // Blue
         }
 
-        const pixels = translate(colorArray);
+        const pixels = this.translate(colorArray);
 
         // Render to strip
         ws281x.render(pixels);
+    }
+
+    renderBytes (bytes) {
+        ws281x.render(bytes);
+    }
+
+    renderArray (array) {
+        ws281x.render(this.translate(array));
+    }
+
+    translate (array) {
+        const newArray = new Uint32Array(LED_NB);
+    
+        for (let i = 0; i < array.length; i = i + 3) {
+            const j = i / 3;
+            newArray[j] = ((array[i] << 24) | (array[i+1] << 16) | (array[i+2] << 8) | (array[i+3]))
+        }
+    
+        return newArray;
     }
 };
 
