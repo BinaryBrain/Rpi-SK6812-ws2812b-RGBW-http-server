@@ -4,7 +4,7 @@ const dgram = require('dgram');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const LedManager = require('ledManager.js');
+const LedManager = require('./ledManager.js');
 const ledManager = new LedManager();
 
 const LED_NB = ledNb(300);
