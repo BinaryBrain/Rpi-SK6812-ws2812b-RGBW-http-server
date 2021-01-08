@@ -1,7 +1,7 @@
 const ws281x = require('rpi-ws281x');
 
 class LedManager {
-    constructor() {
+    constructor(LED_NB, PIN) {
         this.config = {};
         this.config.leds = LED_NB;
         this.config.brightness = 255;

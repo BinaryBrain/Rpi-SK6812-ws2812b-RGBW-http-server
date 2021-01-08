@@ -5,10 +5,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const LedManager = require('./ledManager.js');
-const ledManager = new LedManager();
 
 const LED_NB = ledNb(300);
 const PIN = 18;
+const ledManager = new LedManager(LED_NB, PIN);
 
 function runUdpServer() {
     const server = dgram.createSocket('udp4');
