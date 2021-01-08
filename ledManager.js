@@ -2,7 +2,7 @@ const ws281x = require('rpi-ws281x');
 
 class LedManager {
     constructor(LED_NB, PIN) {
-        this.NB_LED = NB_LED;
+        this.LED_NB = LED_NB;
         this.config = {};
         this.config.leds = LED_NB;
         this.config.brightness = 255;
@@ -74,7 +74,7 @@ class LedManager {
     }
 
     translate (array) {
-        const newArray = new Uint32Array(NB_LED);
+        const newArray = new Uint32Array(LED_NB);
     
         for (let i = 0; i < array.length; i = i + 3) {
             const j = i / 3;
