@@ -75,9 +75,9 @@ class LedManager {
 
     translate (array) {
         if (this.config.strip === 'rgb') {
-            return translateRGBW(array);
+            return this.translateRGBW(array);
         } else {
-            return translateGRBW(array);
+            return this.translateGRBW(array);
         }
     }
 
