@@ -17,7 +17,7 @@ function runUdpServer() {
     });
 
     server.on('message', (msg, rinfo) => {
-        console.log(`UDP server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
+        console.log(`UDP server got ${msg.length} bytes from ${rinfo.address}:${rinfo.port}`);
 
         if (msg.readUInt8() === 3) {
             // Binary RGB
