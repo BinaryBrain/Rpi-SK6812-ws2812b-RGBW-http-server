@@ -29,11 +29,7 @@ function runUdpServer() {
             ledManager.renderArray(colorArray);
         } else if (msg.readUInt8() === 4) {
             // Binary RGBW
-            const payload = new Uint32Array(LED_NB);
-            payload.set(msg.slice(1, msg.length));
-            // const colorArray = Array.from(payload);
-            // Translate and render to strip
-            ledManager.renderArray(payload);
+            ledManager.renderArray(msg.slice(1, msg.length));
         } else if (msg.toString('utf-8', 0, 1) === '{') {
             // JSON
             changeLeds(JSON.parse(msg.toString('utf-8')).colors);
