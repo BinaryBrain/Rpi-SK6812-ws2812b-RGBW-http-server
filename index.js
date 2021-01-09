@@ -13,28 +13,30 @@ function runUdpServer() {
 
     server.on('error', (err) => {
         console.log(`UDP server error:\n${err.stack}`);
-        server.close();
     });
 
     server.on('message', (msg, rinfo) => {
-        console.log(`UDP server got ${msg.length} bytes from ${rinfo.address}:${rinfo.port}`);
-
-        if (msg.readUInt8() === 3) {
-            // Binary RGB
-            const payload = new Uint32Array(LED_NB);
-            payload.set(msg.slice(1, msg.length));
-            const colorArray = Array.from(payload);
-            // FIXME add white byte to array
-            // Render to strip
-            ledManager.renderArray(colorArray);
-        } else if (msg.readUInt8() === 4) {
-            // Binary RGBW
-            ledManager.renderArray(msg.slice(1, msg.length));
-        } else if (msg.toString('utf-8', 0, 1) === '{') {
-            // JSON
-            changeLeds(JSON.parse(msg.toString('utf-8')).colors);
-        } else {
-            console.log(`UDP server error: Cannot read packet starting with byte ${msg.slice(0, 1)}`);
+        try {
+            if (msg.readUInt8() === 3) {
+                // Binary RGB
+                const payload = new Uint32Array(LED_NB);
+                payload.set(msg.slice(1, msg.length));
+                const colorArray = Array.from(payload);
+                // FIXME add white byte to array
+                // Render to strip
+                ledManager.renderArray(colorArray);
+            } else if (msg.readUInt8() === 4) {
+                // Binary RGBW
+                ledManager.renderArray(msg.slice(1, msg.length));
+            } else if (msg.toString('utf-8', 0, 1) === '{') {
+                // JSON
+                changeLeds(JSON.parse(msg.toString('utf-8')).colors);
+            } else {
+                console.log(`UDP server error: Cannot read packet starting with byte ${msg.slice(0, 1)}`);
+            }
+        } catch (e) {
+            console.log(`UDP server error on message: ${msg.toString('hex')} (${msg.length} bytes)`);
+            console.log(e);
         }
     });
 
