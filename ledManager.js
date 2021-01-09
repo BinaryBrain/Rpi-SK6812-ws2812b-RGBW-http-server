@@ -35,7 +35,7 @@ class LedManager {
                 w = 0;
             }
 
-            colorArray.push(g, r, b, w);
+            colorArray.push(r, g, b, w);
         }
 
         const pixels = this.translate(colorArray);
@@ -53,8 +53,8 @@ class LedManager {
                 color.w = 0;
             }
 
-            colorArray.push(color.g); // Green
             colorArray.push(color.r); // Red
+            colorArray.push(color.g); // Green
             colorArray.push(color.b); // Blue
             colorArray.push(color.w); // White
         }
@@ -74,11 +74,30 @@ class LedManager {
     }
 
     translate (array) {
+        if (this.config.strip === 'rgb') {
+            return translateRGBW(array);
+        } else {
+            return translateGRBW(array);
+        }
+    }
+
+    translateRGBW (array) {
         const newArray = new Uint32Array(this.LED_NB);
 
         for (let i = 0; i < array.length; i = i + 3) {
             const j = i / 3;
             newArray[j] = ((array[i+3] << 24) | (array[i] << 16) | (array[i+1] << 8) | (array[i+2]))
+        }
+
+        return newArray;
+    }
+
+    translateGRBW (array) {
+        const newArray = new Uint32Array(this.LED_NB);
+
+        for (let i = 0; i < array.length; i = i + 3) {
+            const j = i / 3;
+            newArray[j] = ((array[i+3] << 24) | (array[i+1] << 16) | (array[i] << 8) | (array[i+2]))
         }
 
         return newArray;
