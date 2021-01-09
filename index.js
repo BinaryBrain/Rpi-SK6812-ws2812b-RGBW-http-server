@@ -32,7 +32,7 @@ function runUdpServer() {
                 // JSON
                 changeLeds(JSON.parse(msg.toString('utf-8')).colors);
             } else {
-                console.log(`UDP server error: Cannot read packet starting with byte ${msg.slice(0, 1)}`);
+                console.log(`UDP server error: Cannot read packet starting with byte 0x${msg.slice(0, 1).toString('hex')}`);
             }
         } catch (e) {
             console.log(`UDP server error on message: ${msg.toString('hex')} (${msg.length} bytes)`);
