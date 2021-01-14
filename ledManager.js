@@ -1,7 +1,8 @@
 const ws281x = require('rpi-ws281x');
 
 class LedManager {
-    constructor(LED_NB, PIN) {
+    constructor(LED_NB, PIN, type) {
+        this.type = type;
         this.LED_NB = LED_NB;
         this.config = {};
         this.config.leds = LED_NB;
@@ -74,7 +75,7 @@ class LedManager {
     }
 
     translate (array) {
-        if (this.config.strip === 'rgb') {
+        if (this.type === 'rgb') {
             return this.translateRGBW(array);
         } else {
             return this.translateGRBW(array);
@@ -97,7 +98,28 @@ class LedManager {
 
         for (let i = 0; i < array.length; i = i + 3) {
             const j = i / 3;
-            newArray[j] = ((array[i+3] << 24) | (array[i+1] << 16) | (array[i] << 8) | (array[i+2]))
+            const nLed = j % 4;
+
+            // const nLed2 = (nLed + 1) % 4;
+            // const r = array[i + nLed];
+            // const g = array[i + nLed + 1];
+            // const b = array[i + nLed + 2];
+            // const w = array[i + nLed + 3];
+
+            switch (nLed) {
+                case 0:
+                    newArray[j] = ((array[i+3] << 24) | (array[i+1] << 16) | (array[i] << 8) | (array[i+2]));
+                    break;
+                case 1:
+                    newArray[j] = ((array[i+3] << 24) | (array[i] << 16) | (array[i+2] << 8) | (array[i+1]));
+                    break;
+                case 2:
+                    newArray[j] = ((array[i+3] << 24) | (array[i] << 16) | (array[i+2] << 8) | (array[i+1]));
+                    break;
+                case 3:
+                    newArray[j] = ((array[i+2] << 24) | (array[i] << 16) | (array[i+1] << 8) | (array[i+3]));
+                    break;
+            }
         }
 
         return newArray;

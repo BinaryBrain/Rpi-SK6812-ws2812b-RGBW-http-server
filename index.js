@@ -6,7 +6,7 @@ const LedManager = require('./ledManager.js');
 
 const LED_NB = ledNb(300);
 const PIN = 18;
-const ledManager = new LedManager(LED_NB, PIN);
+const ledManager = new LedManager(LED_NB, PIN, 'grb');
 
 function runUdpServer() {
     const server = dgram.createSocket('udp4');
