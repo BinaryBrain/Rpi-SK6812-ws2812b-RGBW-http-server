@@ -54,10 +54,10 @@ class LedManager {
                 color.w = 0;
             }
 
-            colorArray.push(color.r); // Red
-            colorArray.push(color.g); // Green
-            colorArray.push(color.b); // Blue
-            colorArray.push(color.w); // White
+            colorArray.push(color.r);
+            colorArray.push(color.g);
+            colorArray.push(color.b);
+            colorArray.push(color.w);
         }
 
         const pixels = this.translate(colorArray);
@@ -87,7 +87,7 @@ class LedManager {
 
         for (let i = 0; i < array.length; i = i + 3) {
             const j = i / 3;
-            newArray[j] = ((array[i+3] << 24) | (array[i] << 16) | (array[i+1] << 8) | (array[i+2]))
+            newArray[j] = ((array[i] << 16) | (array[i+1] << 8) | (array[i+2]))
         }
 
         return newArray;
@@ -100,24 +100,19 @@ class LedManager {
             const j = i / 3;
             const nLed = j % 4;
 
-            // const nLed2 = (nLed + 1) % 4;
-            // const r = array[i + nLed];
-            // const g = array[i + nLed + 1];
-            // const b = array[i + nLed + 2];
-            // const w = array[i + nLed + 3];
-
+            // Science
             switch (nLed) {
                 case 0:
-                    newArray[j] = ((array[i+3] << 24) | (array[i+1] << 16) | (array[i] << 8) | (array[i+2]));
+                    newArray[j] = ((array[i+1] << 16) | (array[i] << 8) | (array[i+2]));
                     break;
                 case 1:
-                    newArray[j] = ((array[i+3] << 24) | (array[i] << 16) | (array[i+2] << 8) | (array[i+1]));
+                    newArray[j] = ((array[i] << 16) | (array[i+2] << 8) | (array[i+1]));
                     break;
                 case 2:
-                    newArray[j] = ((array[i+3] << 24) | (array[i] << 16) | (array[i+2] << 8) | (array[i+1]));
+                    newArray[j] = ((array[i] << 16) | (array[i+1] << 8) | (array[i+3]));
                     break;
                 case 3:
-                    newArray[j] = ((array[i+2] << 24) | (array[i] << 16) | (array[i+1] << 8) | (array[i+3]));
+                    newArray[j] = ((array[i-1] << 16) | (array[i+1] << 8) | (array[i+2]));
                     break;
             }
         }
