@@ -85,3 +85,39 @@ curl -X POST \
   -H 'Content-Type: application/json' \
   -d '{ "colors": [{"r": 255, "g": 255, "b": 255, "w": 255}]}'
 ```
+
+## What we send to ws281x lib
+
+Each line is an UInt32.
+
+### RGBW
+
+```
+2^ | 3 2 1 0
+i+ | - 0 1 2
+---+--------
+0  | - r g b
+1  | - w r g
+2  | - b w r
+3  | - g b w
+4  | - r g b
+5  | - w r g
+6  | - b w r
+7  | - g b w
+```
+
+### GRBW
+
+```
+2^ | 3 2 1 0
+i+ | - 0 1 2
+---+--------
+0  | - g r b
+1  | - w g r
+2  | - b w g
+3  | - r b w
+4  | - g r b
+5  | - w g r
+6  | - b w g
+7  | - r b w
+```
