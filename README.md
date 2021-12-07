@@ -15,6 +15,7 @@ This is an express server that exposes an API to drive SK6812/ws2812b RGBW LED s
 Just run the server with:
 
 ```sh
+cp .env.dist .env # Copy and edit environment variables
 npm install
 npm start
 ```

@@ -1,11 +1,14 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 const dgram = require('dgram');
 const express = require('express');
 const bodyParser = require('body-parser');
 
 const LedManager = require('./ledManager.js');
 
-const LED_NB = ledNb(300);
-const PIN = 18;
+const LED_NB = process.env.NB_LED;
+const PIN = process.env.PIN;
 const ledManager = new LedManager(LED_NB, PIN, 'grb');
 
 function runUdpServer() {

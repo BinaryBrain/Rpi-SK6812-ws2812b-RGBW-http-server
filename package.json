@@ -23,6 +23,7 @@
       "resolved": "https://registry.npmjs.org/debug/-/debug-3.1.0.tgz",
       "version": "3.1.0"
     },
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "follow-redirects": {
       "integrity": "sha512-0V5l4Cizzvqt5D44aTXbFZz+FtyXV1vrDN6qrelxtfYQKW0KO0W2T/hkE8xvGa/540LkZlkaUjO4ailYTFtHVQ==",
