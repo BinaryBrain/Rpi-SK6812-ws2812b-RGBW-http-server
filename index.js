@@ -7,9 +7,9 @@ const bodyParser = require('body-parser');
 
 const LedManager = require('./ledManager.js');
 
-const LED_NB = process.env.NB_LED;
+const NB_LED = process.env.NB_LED;
 const PIN = process.env.PIN;
-const ledManager = new LedManager(LED_NB, PIN, 'grb');
+const ledManager = new LedManager(NB_LED, PIN, 'grb');
 
 function runUdpServer() {
     const server = dgram.createSocket('udp4');
@@ -22,7 +22,7 @@ function runUdpServer() {
         try {
             if (msg.readUInt8() === 3) {
                 // Binary RGB
-                const payload = new Uint32Array(LED_NB);
+                const payload = new Uint32Array(NB_LED);
                 payload.set(msg.slice(1, msg.length));
                 const colorArray = Array.from(payload);
                 // FIXME add white byte to array
@@ -58,9 +58,15 @@ function runExpressServer() {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
 
-    app.post('/', (req, res)=> {
+    app.post('/', (req, res) => {
         changeLeds(req.body.colors);
         res.send(JSON.stringify(req.body.colors));
+    });
+
+    app.get('/config', (req, res) => {
+        res.send(JSON.stringify({
+            NB_LED
+        }));
     });
 
     app.listen(13334);

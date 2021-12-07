@@ -1,11 +1,11 @@
 const ws281x = require('rpi-ws281x');
 
 class LedManager {
-    constructor(LED_NB, PIN, type) {
+    constructor(NB_LED, PIN, type) {
         this.type = type;
-        this.LED_NB = LED_NB;
+        this.NB_LED = NB_LED;
         this.config = {};
-        this.config.leds = LED_NB;
+        this.config.leds = NB_LED;
         this.config.brightness = 255;
         this.config.gpio = PIN;
         this.config.strip = 'rgb';
@@ -83,7 +83,7 @@ class LedManager {
     }
 
     translateRGBW (array) {
-        const newArray = new Uint32Array(this.LED_NB);
+        const newArray = new Uint32Array(this.NB_LED);
 
         for (let i = 0; i < array.length; i = i + 3) {
             const j = i / 3;
@@ -94,7 +94,7 @@ class LedManager {
     }
 
     translateGRBW (array) {
-        const newArray = new Uint32Array(this.LED_NB);
+        const newArray = new Uint32Array(this.NB_LED);
 
         for (let i = 0; i < array.length; i = i + 3) {
             const j = i / 3;
