@@ -55,7 +55,7 @@ _With as many element in the array as your LED strip is. Usually 30, **60** or 1
 
 ### UDP
 
-The UDP server runs on port `13335` by default.
+The UDP server runs on port `13334` by default.
 
 First byte is header: 0x03 for RGB, 0x04 for RGBW. Rest is payload, each byte is a color value.
 

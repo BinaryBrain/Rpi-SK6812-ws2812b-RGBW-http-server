@@ -49,7 +49,7 @@ function runUdpServer() {
         console.log(`First byte is header: 0x03 for RGB, 0x04 for RGBW. Rest is payload, each byte is a color value.`);
     });
 
-    server.bind(13335);
+    server.bind(13334);
 }
 
 function runExpressServer() {
