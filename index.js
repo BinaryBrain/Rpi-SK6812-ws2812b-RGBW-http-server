@@ -64,9 +64,9 @@ function runExpressServer() {
     });
 
     app.get('/config', (req, res) => {
-        res.send(JSON.stringify({
+        res.json({
             NB_LED
-        }));
+        });
     });
 
     app.listen(13334);
