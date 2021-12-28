@@ -76,6 +76,7 @@ class LedManager {
     }
 
     translate (array) {
+        /*
         if (!this.hasWhite) {
             const rgbArray = new Uint32Array(Math.ceil(this.NB_LED * 3 / 4));
 
@@ -91,8 +92,9 @@ class LedManager {
 
             return rgbArray;
         }
+        */
 
-        if (this.type === 'rgb') {
+        if (this.type === 'rgb' || !this.hasWhite) {
             return this.translateRGBW(array);
         } else {
             return this.translateGRBW(array);
