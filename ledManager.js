@@ -1,9 +1,10 @@
 const ws281x = require('rpi-ws281x');
 
 class LedManager {
-    constructor(NB_LED, PIN, type) {
+    constructor(NB_LED, PIN, type, hasWhite) {
         this.type = type;
         this.NB_LED = NB_LED;
+        this.hasWhite = hasWhite;
         this.config = {};
         this.config.leds = NB_LED;
         this.config.brightness = 255;
@@ -75,6 +76,20 @@ class LedManager {
     }
 
     translate (array) {
+        if (!hasWhite) {
+            const rgbArray = [];
+
+            for (let i = 0; i < array.length; i++) {
+                if (i % 4 === 3) {
+                    continue;
+                }
+
+                rgbArray.push(array[i]);
+            }
+
+            return rgbArray;
+        }
+
         if (this.type === 'rgb') {
             return this.translateRGBW(array);
         } else {

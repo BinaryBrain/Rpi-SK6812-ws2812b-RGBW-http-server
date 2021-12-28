@@ -9,7 +9,8 @@ const LedManager = require('./ledManager.js');
 
 const NB_LED = process.env.NB_LED;
 const PIN = process.env.PIN;
-const ledManager = new LedManager(NB_LED, PIN, 'grb');
+const HAS_WHITE = process.env.HAS_WHITE === 'true';
+const ledManager = new LedManager(NB_LED, PIN, 'grb', HAS_WHITE);
 
 function runUdpServer() {
     const server = dgram.createSocket('udp4');
