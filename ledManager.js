@@ -76,7 +76,7 @@ class LedManager {
     }
 
     translate (array) {
-        if (!hasWhite) {
+        if (!this.hasWhite) {
             const rgbArray = new Uint32Array(Math.ceil(this.NB_LED * 3 / 4));
 
             let j = 0;
