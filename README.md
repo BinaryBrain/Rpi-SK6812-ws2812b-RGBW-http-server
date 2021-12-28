@@ -17,7 +17,7 @@ Just run the server with:
 ```sh
 cp .env.dist .env # Copy and edit environment variables
 npm install
-npm start
+sudo npm start
 ```
 
 ## API
