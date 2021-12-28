@@ -76,29 +76,24 @@ class LedManager {
     }
 
     translate (array) {
-        /*
         if (!this.hasWhite) {
-            const rgbArray = new Uint32Array(Math.ceil(this.NB_LED * 3 / 4));
-
-            let j = 0;
-            for (let i = 0; i < array.length; i++) {
-                if (i % 4 === 3) {
-                    continue;
-                }
-
-                rgbArray[j] = array[i];
-                j++;
-            }
-
-            return rgbArray;
+            return this.translateRGB(array);
         }
-        */
-
-        if (this.type === 'rgb' || !this.hasWhite) {
+        if (this.type === 'rgb') {
             return this.translateRGBW(array);
         } else {
             return this.translateGRBW(array);
         }
+    }
+
+    translateRGB (array) {
+        const newArray = new Uint32Array(this.NB_LED);
+
+        for (let i = 0; i < array.length; i++) {
+            newArray[i] = (array[i] << 16) | (array[i+1] << 8) | (array[i+2]);
+        }
+
+        return newArray;
     }
 
     translateRGBW (array) {
@@ -106,7 +101,7 @@ class LedManager {
 
         for (let i = 0; i < array.length; i = i + 3) {
             const j = i / 3;
-            newArray[j] = ((array[i] << 16) | (array[i+1] << 8) | (array[i+2]))
+            newArray[j] = (array[i] << 16) | (array[i+1] << 8) | (array[i+2]);
         }
 
         return newArray;
