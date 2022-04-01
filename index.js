@@ -7,8 +7,8 @@ const bodyParser = require('body-parser');
 
 const LedManager = require('./ledManager.js');
 
-const NB_LED = process.env.NB_LED;
-const PIN = process.env.PIN;
+const NB_LED = parseInt(process.env.NB_LED);
+const PIN = parseInt(process.env.PIN);
 const LED_TYPE = process.env.LED_TYPE;
 const ledManager = new LedManager(NB_LED, PIN, LED_TYPE);
 
