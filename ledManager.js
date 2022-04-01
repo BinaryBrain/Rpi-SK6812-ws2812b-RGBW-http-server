@@ -1,14 +1,21 @@
-const ws281x = require('rpi-ws281x');
+const ws281x = require('rpi-ws281x-native');
 
 class LedManager {
     constructor(NB_LED, PIN, LED_TYPE) {
         this.NB_LED = NB_LED;
-        this.config = {};
-        this.config.leds = NB_LED;
-        this.config.brightness = 255;
-        this.config.gpio = PIN;
-        this.config.strip = LED_TYPE;
-        ws281x.configure(this.config);
+        // this.config = {};
+        // this.config.leds = NB_LED;
+        // this.config.brightness = 255;
+        // this.config.gpio = PIN;
+        // this.config.strip = LED_TYPE;
+        // ws281x.configure(this.config);
+
+        const config = {
+            stripType: LED_TYPE,
+            GPIO: PIN,
+        };
+
+        this.channel = ws281x(NB_LED, config);
     }
 
     // FORMAT: ["FFAA66", "FFAA66FF"]
@@ -41,7 +48,7 @@ class LedManager {
         const pixels = this.translate(colorArray);
 
         // Render to strip
-        ws281x.render(pixels);
+        ws281x.render();
     }
 
     // FORMAT: [{r: 255, g: 255, b: 255, w?: 255}]
@@ -74,7 +81,9 @@ class LedManager {
     }
 
     translate (array) {
-        const newArray = new Uint32Array(this.NB_LED);
+        const newArray = channel.array;
+        console.log(typeof newArray);
+        // const newArray = new Uint32Array(this.NB_LED);
 
         for (let i = 0; i < array.length; i = i + 4) {
             const j = i/4;
