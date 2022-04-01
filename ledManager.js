@@ -1,4 +1,4 @@
-const ws281x = require('rpi-ws281x-native');
+const ws281x = require('rpi-ws281x-native-fixed');
 
 class LedManager {
     constructor(NB_LED, PIN, LED_TYPE) {
