@@ -76,7 +76,8 @@ class LedManager {
     translate (array) {
         const newArray = new Uint32Array(this.NB_LED);
 
-        for (let i = 0; i < array.length; i = i + 3) {
+        for (let i = 0; i < array.length; i = i + 4) {
+            const j = i/4;
             newArray[j] = ((array[i] << 24) | (array[i+1] << 16) | (array[i+2] << 8) | (array[i+3]))
         }
 
