@@ -9,7 +9,8 @@ const LedManager = require('./ledManager.js');
 
 const NB_LED = process.env.NB_LED;
 const PIN = process.env.PIN;
-const ledManager = new LedManager(NB_LED, PIN, 'grb');
+const LED_TYPE = process.env.LED_TYPE;
+const ledManager = new LedManager(NB_LED, PIN, LED_TYPE);
 
 function runUdpServer() {
     const server = dgram.createSocket('udp4');
@@ -82,15 +83,6 @@ function changeLeds(colors) {
         ledManager.setColorsStr(colors);
     } else {
         ledManager.setColorsObj(colors);
-    }
-}
-
-function ledNb(nleds) {
-    let nbytes = nleds * 4;
-    if (nbytes % 3 > 0) {
-        return nbytes / 3 + 1;
-    } else {
-        return nbytes / 3;
     }
 }
 
