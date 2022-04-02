@@ -27,10 +27,7 @@ class LedManager {
             colorArray.push(r, g, b, w);
         }
 
-        const pixels = this.translate(colorArray);
-
-        // Render to strip
-        ws281x.render();
+        this.renderArray(colorArray);
     }
 
     // FORMAT: [{r: 255, g: 255, b: 255, w?: 255}]
@@ -48,29 +45,21 @@ class LedManager {
             colorArray.push(color.b);
         }
 
-        const pixels = this.translate(colorArray);
-
-        // Render to strip
-        ws281x.render(pixels);
-    }
-
-    renderBytes (bytes) {
-        ws281x.render(bytes);
+        this.renderArray(colorArray);
     }
 
     renderArray (array) {
-        ws281x.render(this.translate(array));
+        this.setChannelColors(array);
+        ws281x.render();
     }
 
-    translate (array) {
+    setChannelColors (array) {
         const newArray = this.channel.array;
 
         for (let i = 0; i < array.length; i = i + 4) {
             const j = i/4;
             newArray[j] = ((array[i] << 24) | (array[i+1] << 16) | (array[i+2] << 8) | (array[i+3]));
         }
-
-        return newArray;
     }
 };
 

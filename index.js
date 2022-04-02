@@ -11,6 +11,11 @@ const NB_LED = parseInt(process.env.NB_LED);
 const PIN = parseInt(process.env.PIN);
 const LED_TYPE = process.env.LED_TYPE;
 const INVERT = process.env.INVERT.toLowerCase() === "true";
+
+if (typeof NB_LED === 'undefined' || typeof PIN === 'undefined' || typeof LED_TYPE === 'undefined' || ) {
+    throw new Error("NB_LED, PIN and LED_TYPE should be defined. Either pass them as an environment variable, or add it to the .env file.");
+}
+
 const ledManager = new LedManager(NB_LED, PIN, LED_TYPE, INVERT);
 
 function runUdpServer() {
