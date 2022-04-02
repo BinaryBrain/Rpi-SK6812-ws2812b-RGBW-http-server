@@ -7,9 +7,16 @@ const bodyParser = require('body-parser');
 
 const LedManager = require('./ledManager.js');
 
-const NB_LED = process.env.NB_LED;
-const PIN = process.env.PIN;
-const ledManager = new LedManager(NB_LED, PIN, 'grb');
+const NB_LED = parseInt(process.env.NB_LED);
+const PIN = parseInt(process.env.PIN);
+const LED_TYPE = process.env.LED_TYPE;
+const INVERT = process.env.INVERT.toLowerCase() === "true";
+
+if (typeof NB_LED === 'undefined' || typeof PIN === 'undefined' || typeof LED_TYPE === 'undefined' || ) {
+    throw new Error("NB_LED, PIN and LED_TYPE should be defined. Either pass them as an environment variable, or add it to the .env file.");
+}
+
+const ledManager = new LedManager(NB_LED, PIN, LED_TYPE, INVERT);
 
 function runUdpServer() {
     const server = dgram.createSocket('udp4');
@@ -46,7 +53,7 @@ function runUdpServer() {
     server.on('listening', () => {
         const address = server.address();
         console.log(`UDP server listening ${address.address}:${address.port}`);
-        console.log(`First byte is header: 0x03 for RGB, 0x04 for RGBW. Rest is payload, each byte is a color value.`);
+        console.log(`First byte is header: 0x03 for RGB, 0x04 for WRGB. Rest is payload, each byte is a color value.`);
     });
 
     server.bind(13334);
@@ -82,15 +89,6 @@ function changeLeds(colors) {
         ledManager.setColorsStr(colors);
     } else {
         ledManager.setColorsObj(colors);
-    }
-}
-
-function ledNb(nleds) {
-    let nbytes = nleds * 4;
-    if (nbytes % 3 > 0) {
-        return nbytes / 3 + 1;
-    } else {
-        return nbytes / 3;
     }
 }
 

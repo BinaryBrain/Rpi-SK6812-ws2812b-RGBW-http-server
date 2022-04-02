@@ -1,48 +1,33 @@
-const ws281x = require('rpi-ws281x');
+const ws281x = require('rpi-ws281x-native-fixed');
 
 class LedManager {
-    constructor(NB_LED, PIN, type) {
-        this.type = type;
+    constructor(NB_LED, gpio, stripType, isInverted) {
         this.NB_LED = NB_LED;
-        this.config = {};
-        this.config.leds = NB_LED;
-        this.config.brightness = 255;
-        this.config.gpio = PIN;
-        this.config.strip = 'rgb';
-        ws281x.configure(this.config);
+
+        const config = {
+            stripType,
+            gpio,
+            invert: isInverted
+        };
+
+        this.channel = ws281x(NB_LED, config);
     }
 
-    // FORMAT: ["FFAA66", "FFAA66FF"]
+    // FORMAT: ["CCAA66", "FFCCAA66"]
     setColorsStr (colors) {
         const colorArray = [];
 
         for (let color of colors) {
             const value = parseInt(color, 16);
-
-            let r = 0;
-            let g = 0;
-            let b = 0;
-            let w = 0;
-
-            if (color.length === 8) {
-                r = (value >> 24) & 255;
-                g = (value >> 16) & 255;
-                b = (value >> 8) & 255;
-                w = value & 255;
-            } else {
-                r = (value >> 16) & 255;
-                g = (value >> 8) & 255;
-                b = value & 255;
-                w = 0;
-            }
+            const w = (value >> 24) & 255;
+            const r = (value >> 16) & 255;
+            const g = (value >> 8) & 255;
+            const b = value & 255;
 
             colorArray.push(r, g, b, w);
         }
 
-        const pixels = this.translate(colorArray);
-
-        // Render to strip
-        ws281x.render(pixels);
+        this.renderArray(colorArray);
     }
 
     // FORMAT: [{r: 255, g: 255, b: 255, w?: 255}]
@@ -54,70 +39,27 @@ class LedManager {
                 color.w = 0;
             }
 
+            colorArray.push(color.w);
             colorArray.push(color.r);
             colorArray.push(color.g);
             colorArray.push(color.b);
-            colorArray.push(color.w);
         }
 
-        const pixels = this.translate(colorArray);
-
-        // Render to strip
-        ws281x.render(pixels);
-    }
-
-    renderBytes (bytes) {
-        ws281x.render(bytes);
+        this.renderArray(colorArray);
     }
 
     renderArray (array) {
-        ws281x.render(this.translate(array));
+        this.setChannelColors(array);
+        ws281x.render();
     }
 
-    translate (array) {
-        if (this.type === 'rgb') {
-            return this.translateRGBW(array);
-        } else {
-            return this.translateGRBW(array);
+    setChannelColors (array) {
+        const newArray = this.channel.array;
+
+        for (let i = 0; i < array.length; i = i + 4) {
+            const j = i/4;
+            newArray[j] = ((array[i] << 24) | (array[i+1] << 16) | (array[i+2] << 8) | (array[i+3]));
         }
-    }
-
-    translateRGBW (array) {
-        const newArray = new Uint32Array(this.NB_LED);
-
-        for (let i = 0; i < array.length; i = i + 3) {
-            const j = i / 3;
-            newArray[j] = ((array[i] << 16) | (array[i+1] << 8) | (array[i+2]))
-        }
-
-        return newArray;
-    }
-
-    translateGRBW (array) {
-        const newArray = new Uint32Array(this.NB_LED);
-
-        for (let i = 0; i < array.length; i = i + 3) {
-            const j = i / 3;
-            const nLed = j % 4;
-
-            // Science
-            switch (nLed) {
-                case 0:
-                    newArray[j] = ((array[i+1] << 16) | (array[i] << 8) | (array[i+2]));
-                    break;
-                case 1:
-                    newArray[j] = ((array[i] << 16) | (array[i+2] << 8) | (array[i+1]));
-                    break;
-                case 2:
-                    newArray[j] = ((array[i] << 16) | (array[i+1] << 8) | (array[i+3]));
-                    break;
-                case 3:
-                    newArray[j] = ((array[i-1] << 16) | (array[i+1] << 8) | (array[i+2]));
-                    break;
-            }
-        }
-
-        return newArray;
     }
 };
 
