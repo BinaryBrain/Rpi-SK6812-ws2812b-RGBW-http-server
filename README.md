@@ -8,7 +8,7 @@ This is an express server that exposes an API to drive SK6812/ws2812b RGBW LED s
 
 2. Plug the DATA and GND in your Raspberry Pi.
 
-3. The default data pin is GPIO18 (which is #12 on the circuit board).
+3. The default data pin is GPIO18 (which is #12 on the circuit board). You can change it in the `.env` file.
 
 ## Software Install
 
@@ -18,6 +18,31 @@ Just run the server with:
 cp .env.dist .env # Copy and edit environment variables
 npm install
 sudo npm start
+```
+
+### Supported LED_TYPE
+
+```js
+// 4 color R, G, B and W ordering
+"sk6812-rgbw"
+"sk6812-rbgw"
+"sk6812-grbw"
+"sk6812-gbrw"
+"sk6812-brgw"
+"sk6812-bgrw"
+
+// 3 color R, G and B ordering
+"ws2811-rgb"
+"ws2811-rbg"
+"ws2811-grb"
+"ws2811-gbr"
+"ws2811-brg"
+"ws2811-bgr"
+
+// predefined fixed LED types
+"ws2812"
+"sk6812"
+"sk6812w"
 ```
 
 ## API
@@ -38,7 +63,7 @@ Do an HTTP POST with this JSON body:
 }
 ```
 
-Or this JSON body:
+Or this JSON body (`WWRRGGBB` or `RRGGBB`):
 
 ```json
 {
@@ -67,15 +92,15 @@ Head R    G    B    R    G    B
 ```
 
 ```
-Head R    G    B    W    R    G    B    W   
-0x04 0xFF 0x99 0x55 0x22 0xFF 0x99 0x55 0x22
+Head W    R    G    B    W    R    G    B   
+0x04 0x22 0xFF 0x99 0x55 0x22 0xFF 0x99 0x55
 ```
 
 You can also send a JSON on UDP.
 If the first character is a curly bracket (`{`) it will behave like the HTTP API.
 
 ```json
-{"colors": ["FF9955", "FF9955FF"]}
+{"colors": ["9955CC", "FF9955CC"]}
 ```
 
 ## curl Example
@@ -85,40 +110,4 @@ curl -X POST \
   http://<raspberry-ip-address>:13334 \
   -H 'Content-Type: application/json' \
   -d '{ "colors": [{"r": 255, "g": 255, "b": 255, "w": 255}]}'
-```
-
-## What we send to ws281x lib
-
-Each line is an UInt32.
-
-### RGBW
-
-```
-2^ | 3 2 1 0
-i+ | - 0 1 2
----+--------
-0  | - r g b
-1  | - w r g
-2  | - b w r
-3  | - g b w
-4  | - r g b
-5  | - w r g
-6  | - b w r
-7  | - g b w
-```
-
-### GRBW
-
-```
-2^ | 3 2 1 0
-i+ | - 0 1 2
----+--------
-0  | - g r b
-1  | - w g r
-2  | - b w g
-3  | - r b w
-4  | - g r b
-5  | - w g r
-6  | - b w g
-7  | - r b w
 ```
