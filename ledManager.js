@@ -1,18 +1,13 @@
 const ws281x = require('rpi-ws281x-native-fixed');
 
 class LedManager {
-    constructor(NB_LED, PIN, LED_TYPE) {
+    constructor(NB_LED, gpio, stripType, isInverted) {
         this.NB_LED = NB_LED;
-        // this.config = {};
-        // this.config.leds = NB_LED;
-        // this.config.brightness = 255;
-        // this.config.gpio = PIN;
-        // this.config.strip = LED_TYPE;
-        // ws281x.configure(this.config);
 
         const config = {
-            stripType: LED_TYPE,
-            GPIO: PIN,
+            stripType,
+            gpio,
+            invert: isInverted
         };
 
         this.channel = ws281x(NB_LED, config);
