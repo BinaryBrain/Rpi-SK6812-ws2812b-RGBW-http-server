@@ -54,26 +54,41 @@ function broadcast(msgObj) {
     wsClients.forEach(ws => ws.send(JSON.stringify(msgObj)));
 }
 
+// This part simulate the rpi-ws281x-native-fixed lib
+const channel = { array: []};
+
+function ws281xVirtual(NB_LED, newConfig) {
+    config = newConfig;
+    config.leds = NB_LED;
+    channel.array = new Array(NB_LED);
+    broadcast({
+        cmd: "configure",
+        data: config
+    });
+
+    return channel;
+}
+
+ws281xVirtual.render = function () {
+    const newColors = [];
+
+    for (let value of channel.array) {
+        const w = (value >> 24) & 255;
+        const r = (value >> 16) & 255;
+        const g = (value >> 8) & 255;
+        const b = value & 255;
+
+        newColors.push(w, r, g, b);
+    }
+
+    broadcast({
+        cmd: "render",
+        data: newColors
+    });
+}
+
 const port = parseInt(process.argv[2]) || 8080;
 app.listen(port);
 console.log("Web Server started on port", port);
 
-const VirutalLeds = {
-    configure: (newConfig) => {
-        config = newConfig;
-        broadcast({
-            cmd: "configure",
-            data: config
-        });
-    },
-    render: (newColors) => {
-        colors = newColors;
-
-        broadcast({
-            cmd: "render",
-            data: colors
-        });
-    }
-}
-
-module.exports = VirutalLeds;
+module.exports = ws281xVirtual;

@@ -1,7 +1,6 @@
-const ws281x = require('rpi-ws281x-native-fixed');
-
 class LedManager {
-    constructor(NB_LED, gpio, stripType, isInverted) {
+    constructor(ledInterface, NB_LED, gpio, stripType, isInverted) {
+        this.ledInterface = ledInterface;
         this.NB_LED = NB_LED;
 
         const config = {
@@ -10,7 +9,7 @@ class LedManager {
             invert: isInverted
         };
 
-        this.channel = ws281x(NB_LED, config);
+        this.channel = this.ledInterface(NB_LED, config);
     }
 
     // FORMAT: ["CCAA66", "FFCCAA66"]
@@ -24,7 +23,7 @@ class LedManager {
             const g = (value >> 8) & 255;
             const b = value & 255;
 
-            colorArray.push(r, g, b, w);
+            colorArray.push(w, r, g, b);
         }
 
         this.renderArray(colorArray);
@@ -50,7 +49,7 @@ class LedManager {
 
     renderArray (array) {
         this.setChannelColors(array);
-        ws281x.render();
+        this.ledInterface.render();
     }
 
     setChannelColors (array) {

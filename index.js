@@ -5,8 +5,10 @@ const dgram = require('dgram');
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const ws281x = require('rpi-ws281x-native-fixed');
+const ws281xVirtual = require('./ws281xVirtual.js');
+
 const LedManager = require('./ledManager.js');
-const VirtualLedManager = require('./virtualLedManager.js');
 const NB_LED = parseInt(process.env.NB_LED);
 const PIN = parseInt(process.env.PIN);
 const LED_TYPE = process.env.LED_TYPE;
@@ -20,14 +22,14 @@ let ledManager;
 
 try {
     if (process.getuid && process.getuid() === 0) {
-        ledManager = new LedManager(NB_LED, PIN, LED_TYPE, INVERT);
+        ledManager = new LedManager(ws281x, NB_LED, PIN, LED_TYPE, INVERT);
     } else {
         console.warn("Fallback to virtual server in the browser.");
-        ledManager = new VirtualLedManager(NB_LED);
+        ledManager = new LedManager(ws281xVirtual, NB_LED, PIN, LED_TYPE, INVERT);
     }
 } catch (e) {
     console.warn("Fallback to virtual server in the browser.");
-    ledManager = new VirtualLedManager(NB_LED);
+    ledManager = new LedManager(ws281xVirtual, NB_LED, PIN, LED_TYPE, INVERT);
 }
 
 function runUdpServer() {
