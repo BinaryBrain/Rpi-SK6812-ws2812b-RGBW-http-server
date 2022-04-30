@@ -1,0 +1,86 @@
+body {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    font-size: 2em;
+    font-family: sans-serif;
+}
+
+#container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #111;
+    color: #eee;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+@keyframes disappear {
+    0%{
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+    }
+}
+
+@keyframes appear {
+    0%{
+        opacity: 0;
+    }
+    75% {
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+.centering {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.center {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+.disappearing {
+    opacity: 0;
+    animation: disappear 2s ease-in-out;
+
+    text-shadow: -1px 1px 2px #000,
+                  1px 1px 2px #000,
+                   1px -1px 0 #000,
+                  -1px -1px 0 #000;
+}
+
+.appearing {
+    animation: appear 2s ease-in-out;
+}
+
+.light2 #circle {
+    position: absolute;
+    margin: auto;
+}
+
+.light2 .led {
+    position: absolute;
+}

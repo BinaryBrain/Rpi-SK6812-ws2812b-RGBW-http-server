@@ -10,6 +10,7 @@
     "debug": "^4.3.4",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-ws": "^5.0.2",
     "follow-redirects": "^1.14.9",
     "rpi-ws281x-native-fixed": "^1.0.3"
   }

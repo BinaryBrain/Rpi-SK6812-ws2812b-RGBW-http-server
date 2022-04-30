@@ -6,7 +6,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const LedManager = require('./ledManager.js');
-
+const VirtualLedManager = require('./virtualLedManager.js');
 const NB_LED = parseInt(process.env.NB_LED);
 const PIN = parseInt(process.env.PIN);
 const LED_TYPE = process.env.LED_TYPE;
@@ -16,7 +16,19 @@ if (typeof NB_LED === 'undefined' || typeof PIN === 'undefined' || typeof LED_TY
     throw new Error("NB_LED, PIN and LED_TYPE should be defined. Either pass them as an environment variable, or add it to the .env file.");
 }
 
-const ledManager = new LedManager(NB_LED, PIN, LED_TYPE, INVERT);
+let ledManager;
+
+try {
+    if (process.getuid && process.getuid() === 0) {
+        ledManager = new LedManager(NB_LED, PIN, LED_TYPE, INVERT);
+    } else {
+        console.warn("Fallback to virtual server in the browser.");
+        ledManager = new VirtualLedManager(NB_LED);
+    }
+} catch (e) {
+    console.warn("Fallback to virtual server in the browser.");
+    ledManager = new VirtualLedManager(NB_LED);
+}
 
 function runUdpServer() {
     const server = dgram.createSocket('udp4');
