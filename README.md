@@ -12,7 +12,12 @@ This is an express server that exposes an API to drive SK6812/ws2812b RGBW LED s
 
 ## Software Install
 
-Just run the server with:
+You'll need some dependencies for this. On Debian, Ubuntu, etc. you can install them with
+```
+sudo apt install build-essential python3
+```
+
+Then, just run the server with:
 
 ```sh
 cp .env.dist .env # Copy and edit environment variables
