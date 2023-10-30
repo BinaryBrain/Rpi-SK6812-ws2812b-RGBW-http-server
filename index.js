@@ -24,11 +24,13 @@ try {
     if (process.getuid && process.getuid() === 0) {
         ledManager = new LedManager(ws281x, NB_LED, PIN, LED_TYPE, INVERT);
     } else {
-        console.warn("Fallback to virtual server in the browser.");
+        console.warn("Falling back to virtual server in the browser.");
+        console.warn("If you're running this on a Raspberry Pi, you need to run this script as root to use the GPIO.");
         ledManager = new LedManager(ws281xVirtual, NB_LED, PIN, LED_TYPE, INVERT);
     }
 } catch (e) {
-    console.warn("Fallback to virtual server in the browser.");
+    console.warn(e);
+    console.warn("Falling back to virtual server in the browser.");
     ledManager = new LedManager(ws281xVirtual, NB_LED, PIN, LED_TYPE, INVERT);
 }
 
